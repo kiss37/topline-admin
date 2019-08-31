@@ -18,6 +18,7 @@
                 type="primary"
                 plain
                 @click="getCode"
+                :disabled="sec != 60"
               >{{sec == 60 ? "获取验证码" : "还有" + sec +"秒" }}</el-button>
             </el-col>
           </el-form-item>
@@ -101,9 +102,12 @@ export default {
                 this.$message.error("账号密码错误");
               }
             })
-            .catch(res => {
-              this.$message.error("账号密码错误");
-            });
+            .catch( res => {
+              this.$message({
+                  message: "账号或密码错误！",
+                  type: "error"
+                });
+            } )
         } else {
           return false;
         }
@@ -121,10 +125,11 @@ export default {
   justify-content: center;
   align-items: center;
   .login-form-warp {
-    width: 300px;
-    height: 300px;
+    width: 450px;
     background-color: #fff;
     padding: 50px;
+    border-radius: 20px;
+    opacity: .8;
     .logo {
       text-align: center;
       margin-bottom: 25px;
