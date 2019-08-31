@@ -23,6 +23,7 @@ import home from '../views/home/index.vue'
 const routes = [
   { path: '/login', component: login },
   { path: '/home', component: home },
+  { path: '/', redirect: '/login' },
 ]
 
 // 实例化router
