@@ -23,12 +23,21 @@
             </el-col>
           </el-form-item>
           <el-form-item prop="agree">
-            <el-checkbox name="type" v-model="ruleForm.agree"></el-checkbox><span style="margin-left:10px">我已阅读并同意<a href="javascript:void(0)" style="color:#3296fa">用户协议</a>和<a href="javascript:void(0)" style="color:#3296fa">隐私条款</a></span>
+            <el-checkbox name="type" v-model="ruleForm.agree"></el-checkbox>
+            <span style="margin-left:10px">
+              我已阅读并同意
+              <a href="javascript:void(0)" style="color:#3296fa">用户协议</a>和
+              <a href="javascript:void(0)" style="color:#3296fa">隐私条款</a>
+            </span>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" class="btn-login" @click="doLogin('ruleForm')">登陆</el-button>
+            <el-button
+              type="primary"
+              class="btn-login"
+              @click="doLogin('ruleForm')"
+              :loading="isLoding"
+            >登陆</el-button>
           </el-form-item>
-          
         </el-form>
       </div>
     </div>
@@ -42,7 +51,7 @@ export default {
       ruleForm: {
         mobile: "18801185985",
         code: "",
-        agree:false
+        agree: false
       },
       rules: {
         mobile: [
@@ -53,11 +62,10 @@ export default {
           { required: true, message: "请输验证码", trigger: "blur" },
           { min: 6, max: 6, message: "请输入正确6位验证码", trigger: "blur" }
         ],
-        agree:[
-          {pattern:/true/,message:"请勾选同意",trigger:"change"}
-        ]
+        agree: [{ pattern: /true/, message: "请勾选同意", trigger: "change" }]
       },
-      sec: 60
+      sec: 60,
+      isLoding: false
     };
   },
   methods: {
@@ -93,6 +101,7 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           // 能走到这来表示通过所有规则 可以开始发送axios
+          this.isLoding=true
           this.$axios
             .post(`http://ttapi.research.itcast.cn/mp/v1_0/authorizations`, {
               mobile: this.ruleForm.mobile,
@@ -101,8 +110,8 @@ export default {
             .then(res => {
               if (res.data.data) {
                 // 需要把这个整体存到sessionStorage, 先把对象转成字符串然后存入
-                let jsonStr=JSON.stringify(res.data.data)
-                window.sessionStorage.setItem('user_info',jsonStr)
+                let jsonStr = JSON.stringify(res.data.data);
+                window.sessionStorage.setItem("user_info", jsonStr);
                 this.$message({
                   message: "登陆成功",
                   type: "success"
@@ -113,12 +122,13 @@ export default {
                 this.$message.error("账号密码错误");
               }
             })
-            .catch( res => {
+            .catch(res => {
+              this.isLoding=false
               this.$message({
-                  message: "账号或密码错误！",
-                  type: "error"
-                });
-            } )
+                message: "账号或密码错误！",
+                type: "error"
+              });
+            });
         } else {
           return false;
         }
@@ -140,7 +150,7 @@ export default {
     background-color: #fff;
     padding: 50px;
     border-radius: 20px;
-    opacity: .8;
+    opacity: 0.8;
     .logo {
       text-align: center;
       margin-bottom: 25px;

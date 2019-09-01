@@ -61,16 +61,16 @@
               <span>江苏传智播客教育科技股份有限公司</span>
             </el-col>
             <el-col :span="4" :offset="4">
-              <el-dropdown trigger="click">
+              <el-dropdown trigger="click" @command="doCmd">
                 <span class="el-dropdown-link">
                   <img src="../../assets/logo.png" alt />
                   <span class="username">我的妈呀</span>
                   <i class="el-icon-arrow-down el-icon--right"></i>
                 </span>
                 <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item icon="el-icon-user-solid">个人信息</el-dropdown-item>
-                  <el-dropdown-item icon="el-icon-share">git地址</el-dropdown-item>
-                  <el-dropdown-item icon="el-icon-error">退出</el-dropdown-item>
+                  <el-dropdown-item command="info" icon="el-icon-user-solid">个人信息</el-dropdown-item>
+                  <el-dropdown-item command="git" icon="el-icon-share">git地址</el-dropdown-item>
+                  <el-dropdown-item command="logout" icon="el-icon-error">退出</el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
             </el-col>
@@ -84,7 +84,24 @@
 </template>
 
 <script>
-export default {};
+export default {
+  data() {
+    return {
+      
+    }
+  },
+  methods: {
+    doCmd(cmd){
+      if (cmd=="logout") {
+        this.$message.error('退出成功')
+        // 先删除sessionStorage 里面的user_info
+        window.sessionStorage.removeItem('user_info')
+        // 设置路由跳转
+        this.$router.push('./login')
+      }
+    }
+  },
+};
 </script>
 
 <style lang="less" scoped>
