@@ -60,11 +60,11 @@
             <el-col :span="16">
               <span>江苏传智播客教育科技股份有限公司</span>
             </el-col>
-            <el-col :span="4" :offset="4">
-              <el-dropdown trigger="click" @command="doCmd">
+            <el-col :span="4" :offset="4" class="my-right">
+              <el-dropdown trigger="click" @command="doCmd" class="my-dropdown">
                 <span class="el-dropdown-link">
-                  <img src="../../assets/logo.png" alt />
-                  <span class="username">我的妈呀</span>
+                  <img :src="userInfo.photo" alt />
+                  <span class="username">{{ userInfo.name }}</span>
                   <i class="el-icon-arrow-down el-icon--right"></i>
                 </span>
                 <el-dropdown-menu slot="dropdown">
@@ -87,20 +87,31 @@
 export default {
   data() {
     return {
-      
-    }
+      userInfo: {
+        name: "",
+        photo: ""
+      }
+    };
   },
   methods: {
-    doCmd(cmd){
-      if (cmd=="logout") {
-        this.$message.error('退出成功')
+    doCmd(cmd) {
+      if (cmd == "logout") {
+        this.$message.error("退出成功");
         // 先删除sessionStorage 里面的user_info
-        window.sessionStorage.removeItem('user_info')
+        window.sessionStorage.removeItem("user_info");
         // 设置路由跳转
-        this.$router.push('./login')
+        this.$router.push("./login");
       }
     }
   },
+  created() {
+    // 先获取json文件再转成对象
+    var res = window.sessionStorage.getItem("user_info");
+    var obj = JSON.parse(res);
+    // 设置给值
+    this.userInfo.name = obj.name;
+    this.userInfo.photo = obj.photo;
+  }
 };
 </script>
 
@@ -131,17 +142,26 @@ export default {
         height: 100%;
         display: flex;
         align-items: center;
-        .el-dropdown-link {
-          color: #000;
-          cursor: pointer;
+
+        .my-right {
           display: flex;
-          align-items: center;
-          .username {
-            margin: 0 10px;
-          }
-          img {
-            width: 30px;
-            height: 30px;
+          justify-content: flex-end;
+
+          .my-dropdown {
+            .el-dropdown-link {
+              color: #000;
+              cursor: pointer;
+              display: flex;
+              align-items: center;
+              .username {
+                margin: 0 10px;
+              }
+              img {
+                width: 30px;
+                height: 30px;
+                border-radius: 50%;
+              }
+            }
           }
         }
       }
