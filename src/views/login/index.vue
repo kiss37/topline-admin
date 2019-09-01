@@ -22,9 +22,13 @@
               >{{sec == 60 ? "获取验证码" : "还有" + sec +"秒" }}</el-button>
             </el-col>
           </el-form-item>
+          <el-form-item prop="agree">
+            <el-checkbox name="type" v-model="ruleForm.agree"></el-checkbox><span style="margin-left:10px">我已阅读并同意<a href="javascript:void(0)" style="color:#3296fa">用户协议</a>和<a href="javascript:void(0)" style="color:#3296fa">隐私条款</a></span>
+          </el-form-item>
           <el-form-item>
             <el-button type="primary" class="btn-login" @click="doLogin('ruleForm')">登陆</el-button>
           </el-form-item>
+          
         </el-form>
       </div>
     </div>
@@ -37,7 +41,8 @@ export default {
     return {
       ruleForm: {
         mobile: "",
-        code: ""
+        code: "",
+        agree:false
       },
       rules: {
         mobile: [
@@ -47,6 +52,9 @@ export default {
         code: [
           { required: true, message: "请输验证码", trigger: "blur" },
           { min: 6, max: 6, message: "请输入正确6位验证码", trigger: "blur" }
+        ],
+        agree:[
+          {pattern:/true/,message:"请勾选同意",trigger:"change"}
         ]
       },
       sec: 60

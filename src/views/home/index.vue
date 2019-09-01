@@ -1,5 +1,7 @@
 <template>
-  <div>我是index.vue</div>
+  <div>
+    
+  </div>
 </template>
 
 <script>
