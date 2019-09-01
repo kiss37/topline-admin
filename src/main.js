@@ -11,7 +11,6 @@ import router from './router/index'
 import './assets/css/base.css'
 
 
-
 new Vue({
   router,
   render: h => h(App),

@@ -40,7 +40,7 @@ export default {
   data() {
     return {
       ruleForm: {
-        mobile: "",
+        mobile: "18801185985",
         code: "",
         agree:false
       },
@@ -100,6 +100,9 @@ export default {
             })
             .then(res => {
               if (res.data.data) {
+                // 需要把这个整体存到sessionStorage, 先把对象转成字符串然后存入
+                let jsonStr=JSON.stringify(res.data.data)
+                window.sessionStorage.setItem('user_info',jsonStr)
                 this.$message({
                   message: "登陆成功",
                   type: "success"

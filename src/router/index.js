@@ -31,5 +31,22 @@ const router = new VueRouter({
   routes
 })
 
+// 路由守卫
+router.beforeEach((to,from,next)=>{
+  // if当to.path 是不是去/home
+  if(to.path!='/login'){
+    // 做登录判断依据就算res是有值还是为空 , 有值就放行 没值打回login页面
+    var res=window.sessionStorage.getItem('user_info')
+    if (res) {
+      next()
+    }else{
+      next('/login')
+    }
+  }else{
+    next()
+  }
+})
+
+
 // 默认把router暴露出去
 export default router;
