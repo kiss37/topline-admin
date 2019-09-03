@@ -10,6 +10,7 @@
         </el-header>
         <el-main class="my-aside-main">
           <el-menu
+            :router="true"
             default-active="2"
             class="el-menu-vertical-demo"
             background-color="#323745"
@@ -28,7 +29,7 @@
                 <span>内容管理</span>
               </template>
               <el-menu-item index="1-1">发布文章</el-menu-item>
-              <el-menu-item index="1-2">内容列表</el-menu-item>
+              <el-menu-item index="/article">内容列表</el-menu-item>
               <el-menu-item index="1-3">评论列表</el-menu-item>
               <el-menu-item index="1-3">素材管理</el-menu-item>
             </el-submenu>
@@ -103,8 +104,8 @@ export default {
         window.sessionStorage.removeItem("user_info");
         // 设置路由跳转
         this.$router.push("./login");
-      }else if(cmd == "git"){
-        window.location.href='https://github.com/kiss37'
+      } else if (cmd == "git") {
+        window.location.href = "https://github.com/kiss37";
       }
     }
   },
