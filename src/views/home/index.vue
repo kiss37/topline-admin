@@ -101,6 +101,8 @@ export default {
         window.sessionStorage.removeItem("user_info");
         // 设置路由跳转
         this.$router.push("./login");
+      }else if(cmd == "git"){
+        window.location.href='https://github.com/kiss37'
       }
     }
   },
