@@ -10,6 +10,9 @@ import router from './router/index'
 // 导入全局基础css
 import './assets/css/base.css'
 
+import axios from 'axios';
+Vue.prototype.$axios=axios
+axios.defaults.baseURL="http://ttapi.research.itcast.cn/"
 
 new Vue({
   router,

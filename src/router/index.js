@@ -8,21 +8,21 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 Vue.use(ElementUI);
 
-import axios from 'axios';
-Vue.prototype.$axios=axios
-
 // 中间键 use 一下
 Vue.use(VueRouter)
 
 // 导入组件
 import login from '../views/login'
 import home from '../views/home/index.vue'
-
+import article from '../views/home/article/index.vue'
+//导入进度条插件 以及css
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
 
 // 定义路由规则
 const routes = [
   { path: '/login', component: login },
-  { path: '/home', component: home },
+  { path: '/home', component: home,children:[{path:'/article',component:article}] },
   { path: '/', redirect: '/login' },
 ]
 
@@ -33,6 +33,8 @@ const router = new VueRouter({
 
 // 路由守卫
 router.beforeEach((to,from,next)=>{
+  // 设置进度条
+  NProgress.start()
   // if当to.path 是不是去/home
   if(to.path!='/login'){
     // 做登录判断依据就算res是有值还是为空 , 有值就放行 没值打回login页面
@@ -47,6 +49,9 @@ router.beforeEach((to,from,next)=>{
   }
 })
 
+router.afterEach((to, from) => {
+    NProgress.done()
+})
 
 // 默认把router暴露出去
 export default router;

@@ -77,7 +77,9 @@
           </el-row>
         </el-header>
         <!-- 百边mian -->
-        <el-main>Main</el-main>
+        <el-main>
+          <router-view></router-view>
+        </el-main>
       </el-container>
     </el-main>
   </el-container>

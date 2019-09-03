@@ -103,7 +103,7 @@ export default {
           // 能走到这来表示通过所有规则 可以开始发送axios
           this.isLoding=true
           this.$axios
-            .post(`http://ttapi.research.itcast.cn/mp/v1_0/authorizations`, {
+            .post(`/mp/v1_0/authorizations`, {
               mobile: this.ruleForm.mobile,
               code: this.ruleForm.code
             })
