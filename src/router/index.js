@@ -4,9 +4,9 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 
 // 导入饿了么ui
-import ElementUI from 'element-ui';
-import 'element-ui/lib/theme-chalk/index.css';
-Vue.use(ElementUI);
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
+Vue.use(ElementUI)
 
 // 中间键 use 一下
 Vue.use(VueRouter)
@@ -14,6 +14,7 @@ Vue.use(VueRouter)
 // 导入组件
 import login from '../views/login'
 import home from '../views/home/index.vue'
+import publish from '../views/home/publish'
 import article from '../views/home/article/index.vue'
 //导入进度条插件 以及css
 import NProgress from 'nprogress'
@@ -22,8 +23,15 @@ import 'nprogress/nprogress.css'
 // 定义路由规则
 const routes = [
   { path: '/login', component: login },
-  { path: '/home', component: home,children:[{path:'/article',component:article}] },
-  { path: '/', redirect: '/login' },
+  {
+    path: '/home',
+    component: home,
+    children: [
+      { path: '/article', component: article },
+      { path: '/publish', component: publish }
+    ]
+  },
+  { path: '/', redirect: '/login' }
 ]
 
 // 实例化router
@@ -32,7 +40,7 @@ const router = new VueRouter({
 })
 
 // 路由守卫
-router.beforeEach((to,from,next)=>{
+router.beforeEach((to, from, next) => {
   // 设置进度条
   next()
   // NProgress.start()
@@ -51,8 +59,8 @@ router.beforeEach((to,from,next)=>{
 })
 
 router.afterEach((to, from) => {
-    NProgress.done()
+  NProgress.done()
 })
 
 // 默认把router暴露出去
-export default router;
+export default router

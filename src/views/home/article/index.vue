@@ -12,15 +12,7 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="频道">
-          <el-select placeholder="请选择活动区域" v-model="searchParams.channel_id">
-            <el-option label="所有频道" value></el-option>
-            <el-option
-              v-for="item in channelList"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id"
-            ></el-option>
-          </el-select>
+          <ttchannel></ttchannel>
         </el-form-item>
         <el-form-item>
           <el-date-picker
@@ -41,7 +33,7 @@
       <b>{{total}}</b> 条符合条件的内容
     </p>
     <!-- 表格 -->
-    <el-table :data="tableData" style="width: 100%" v-loading="loading">
+    <el-table :data="tableData" style="width: 100% ;padding-right:10px" v-loading="loading">
       <el-table-column prop="cover" label="封面" width="200">
         <template slot-scope="scope">
           <img width="60" :src="scope.row.cover.images[0]" alt />
@@ -74,16 +66,20 @@
 </template>
 
 <script>
+import ttchannel from '../../../components/ttchannel/index'
 export default {
   name: "article1",
+  components: {
+    ttchannel
+  },
   data() {
     return {
       total: 0,
       loading: false,
-      channelList: [],
+      
       searchParams: {
         status: "",
-        channel_id: "",
+        
         date: ""
       },
       tableData: []
@@ -163,11 +159,7 @@ export default {
   },
   created() {
     this.loadTableData(1);
-    // 一进来发送请求获取所有类别
-    this.$axios.get(`/mp/v1_0/channels`).then(res => {
-      // console.log(res);
-      this.channelList = res.data.data.channels;
-    });
+   
   },
   filters: {
     formatStatus(val) {

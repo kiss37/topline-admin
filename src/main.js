@@ -17,7 +17,6 @@ axios.defaults.baseURL="http://ttapi.research.itcast.cn/"
 
 axios.defaults.transformResponse= [function (data) {
   // 对 data 进行任意转换处理
-
   // return JSONbig.parse(data);
   try {
     //如果能转换成功，就转换，并返回转换后的结果
