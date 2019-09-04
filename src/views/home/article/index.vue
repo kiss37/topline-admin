@@ -4,7 +4,7 @@
       <el-form ref="form" :model="searchParams">
         <el-form-item label="状态">
           <el-radio-group v-model="searchParams.status">
-            <el-radio label="">全部</el-radio>
+            <el-radio label>全部</el-radio>
             <el-radio :label="0">草稿</el-radio>
             <el-radio :label="1">待审核</el-radio>
             <el-radio :label="2">审核通过</el-radio>
@@ -14,12 +14,17 @@
         <el-form-item label="频道">
           <el-select placeholder="请选择活动区域" v-model="searchParams.channel_id">
             <el-option label="所有频道" value></el-option>
-            <el-option v-for="item in channelList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option
+              v-for="item in channelList"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
           <el-date-picker
-          value-format="yyyy-MM-dd"
+            value-format="yyyy-MM-dd"
             v-model="searchParams.date"
             type="daterange"
             range-separator="至"
@@ -49,9 +54,11 @@
         </template>
       </el-table-column>
       <el-table-column prop="pubdate" label="发布时间"></el-table-column>
-      <el-table-column label="操作">
-        <el-button size="small" plain type="primary">修改</el-button>
-        <el-button size="small" plain type="danger">删除</el-button>
+      <el-table-column label="操作" slot-scope>
+        <template slot-scope="scope">
+          <el-button size="small" plain type="primary">修改</el-button>
+          <el-button size="small" plain type="danger" @click="doDel(scope.row)">删除</el-button>
+        </template>
       </el-table-column>
     </el-table>
     <el-pagination
@@ -83,8 +90,34 @@ export default {
     };
   },
   methods: {
-    doSearch(){
-      this.loadTableData(1)
+    doDel(row) {
+      console.log(row);
+      
+      this.$confirm("确定要删除?", "温馨提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          this.$axios.delete(`/mp/v1_0/articles/${row.id}`).then(res => {
+            // 提示
+            this.$message({
+              type: "success",
+              message: "删除成功!"
+            });
+          });
+            // 重新加载数据
+            this.loadTableData(1);
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
+    },
+    doSearch() {
+      this.loadTableData(1);
     },
     // 封装获取表格数据的方法
     loadTableData(page) {
@@ -94,8 +127,12 @@ export default {
       this.loading = true;
 
       // 获取状态和域的值
-      const status=this.searchParams.status===""? undefined:this.searchParams.status
-      const channel_id=this.searchParams.channel_id===""? undefined:this.searchParams.channel_id
+      const status =
+        this.searchParams.status === "" ? undefined : this.searchParams.status;
+      const channel_id =
+        this.searchParams.channel_id === ""
+          ? undefined
+          : this.searchParams.channel_id;
 
       // 发送axios
       this.$axios
@@ -103,8 +140,8 @@ export default {
           params: {
             status,
             channel_id,
-            begin_pubdate:this.searchParams.date[0],
-            end_pubdate:this.searchParams.date[1],
+            begin_pubdate: this.searchParams.date[0],
+            end_pubdate: this.searchParams.date[1],
             page: page
           },
           headers: {

@@ -6,6 +6,7 @@ Vue.config.productionTip = false
 
 // 定义路由 导入单独准备的router文件
 import router from './router/index'
+import JSONbig from 'json-bigint'
 
 // 导入全局基础css
 import './assets/css/base.css'
@@ -13,6 +14,22 @@ import './assets/css/base.css'
 import axios from 'axios';
 Vue.prototype.$axios=axios
 axios.defaults.baseURL="http://ttapi.research.itcast.cn/"
+
+axios.defaults.transformResponse= [function (data) {
+  // 对 data 进行任意转换处理
+
+  // return JSONbig.parse(data);
+  try {
+    //如果能转换成功，就转换，并返回转换后的结果
+    let obj = JSONbig.parse(data);
+    return obj;
+
+  } catch (error) {
+
+    // 如果不能转换成功，就直接返回它原来的结果
+    return data;
+  }
+}],
 
 // 添加请求拦截器
 axios.interceptors.request.use(function (config) {
@@ -37,7 +54,7 @@ axios.interceptors.response.use(function (response) {
   // 对响应错误做点什么
   Vue.prototype.$message.error('请先登录')
   // 返回登录页
-  this.$router.push('/login')
+  router.push('/login')
   return Promise.reject(error);
 });
 

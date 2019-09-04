@@ -34,19 +34,20 @@ const router = new VueRouter({
 // 路由守卫
 router.beforeEach((to,from,next)=>{
   // 设置进度条
-  NProgress.start()
-  // if当to.path 是不是去/home
-  if(to.path!='/login'){
-    // 做登录判断依据就算res是有值还是为空 , 有值就放行 没值打回login页面
-    var res=window.sessionStorage.getItem('user_info')
-    if (res) {
-      next()
-    }else{
-      next('/login')
-    }
-  }else{
-    next()
-  }
+  next()
+  // NProgress.start()
+  // // if当to.path 是不是去/home
+  // if(to.path!='/login'){
+  //   // 做登录判断依据就算res是有值还是为空 , 有值就放行 没值打回login页面
+  //   var res=window.sessionStorage.getItem('user_info')
+  //   if (res) {
+  //     next()
+  //   }else{
+  //     next('/login')
+  //   }
+  // }else{
+  //   next()
+  // }
 })
 
 router.afterEach((to, from) => {
