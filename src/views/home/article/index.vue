@@ -4,21 +4,22 @@
       <el-form ref="form" :model="searchParams">
         <el-form-item label="状态">
           <el-radio-group v-model="searchParams.status">
-            <el-radio :label="1">全部</el-radio>
-            <el-radio :label="2">草稿</el-radio>
-            <el-radio :label="3">待审核</el-radio>
-            <el-radio :label="4">审核通过</el-radio>
-            <el-radio :label="5">审核失败</el-radio>
+            <el-radio label="">全部</el-radio>
+            <el-radio :label="0">草稿</el-radio>
+            <el-radio :label="1">待审核</el-radio>
+            <el-radio :label="2">审核通过</el-radio>
+            <el-radio :label="3">审核失败</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="频道">
           <el-select placeholder="请选择活动区域" v-model="searchParams.channel_id">
             <el-option label="所有频道" value></el-option>
-            <el-option label="区域二" value="two"></el-option>
+            <el-option v-for="item in channelList" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
           <el-date-picker
+          value-format="yyyy-MM-dd"
             v-model="searchParams.date"
             type="daterange"
             range-separator="至"
@@ -27,15 +28,15 @@
           ></el-date-picker>
         </el-form-item>
       </el-form>
-      <el-button type="primary">提交</el-button>
+      <el-button type="primary" @click="doSearch">筛选</el-button>
     </div>
 
     <p>
       共找到
-      <b>13</b> 条符合条件的内容
+      <b>{{total}}</b> 条符合条件的内容
     </p>
     <!-- 表格 -->
-    <el-table :data="tableData" style="width: 100%" v-if="isInit" v-loading="loading">
+    <el-table :data="tableData" style="width: 100%" v-loading="loading">
       <el-table-column prop="cover" label="封面" width="200">
         <template slot-scope="scope">
           <img width="60" :src="scope.row.cover.images[0]" alt />
@@ -61,7 +62,6 @@
       :page-size="10"
       layout="total, prev, pager, next"
       :total="total"
-      style="margin-top:10px"
     ></el-pagination>
   </el-card>
 </template>
@@ -72,47 +72,39 @@ export default {
   data() {
     return {
       total: 0,
-      isInit: false,
       loading: false,
+      channelList: [],
       searchParams: {
-        status: 1,
+        status: "",
         channel_id: "",
         date: ""
       },
-      tableData: [
-        {
-          date: "2016-05-02",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄"
-        },
-        {
-          date: "2016-05-04",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1517 弄"
-        },
-        {
-          date: "2016-05-01",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1519 弄"
-        },
-        {
-          date: "2016-05-03",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1516 弄"
-        }
-      ]
+      tableData: []
     };
   },
   methods: {
+    doSearch(){
+      this.loadTableData(1)
+    },
     // 封装获取表格数据的方法
     loadTableData(page) {
       // 当页面一加载就获取数据 并且转换成对象
       let obj = JSON.parse(window.sessionStorage.getItem("user_info"));
+      // 发送请求让他转圈圈
       this.loading = true;
+
+      // 获取状态和域的值
+      const status=this.searchParams.status===""? undefined:this.searchParams.status
+      const channel_id=this.searchParams.channel_id===""? undefined:this.searchParams.channel_id
+
       // 发送axios
       this.$axios
         .get("/mp/v1_0/articles", {
           params: {
+            status,
+            channel_id,
+            begin_pubdate:this.searchParams.date[0],
+            end_pubdate:this.searchParams.date[1],
             page: page
           },
           headers: {
@@ -125,7 +117,6 @@ export default {
           this.tableData = res.data.data.results;
           // 赋值总条数
           this.total = res.data.data.total_count;
-          this.isInit = true;
           this.loading = false;
         });
     },
@@ -135,6 +126,11 @@ export default {
   },
   created() {
     this.loadTableData(1);
+    // 一进来发送请求获取所有类别
+    this.$axios.get(`/mp/v1_0/channels`).then(res => {
+      // console.log(res);
+      this.channelList = res.data.data.channels;
+    });
   },
   filters: {
     formatStatus(val) {
