@@ -137,6 +137,9 @@ export default {
     }
     .my-aside-main {
       padding: 0;
+      .el-menu-vertical-demo{
+        overflow: hidden;
+      }
     }
   }
   .my-main {

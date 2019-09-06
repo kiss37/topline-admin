@@ -1,5 +1,5 @@
 <template>
-  <el-select placeholder="请选择活动区域" v-model="channel_id">
+  <el-select placeholder="请选择活动区域" :value="channel_id" @change="toFather($event)">
     <el-option label="所有频道" value></el-option>
     <el-option v-for="item in channelList" :key="item.id" :label="item.name" :value="item.id"></el-option>
   </el-select>
@@ -8,10 +8,14 @@
 <script>
 export default {
   name: "ttchannel",
+  props:['channel_id'],
+  model:{
+    prop:"channel_id",
+    event:"change"
+  },
   data() {
     return {
       channelList: [],
-      channel_id: "",
     }
   },
   created() {
@@ -20,6 +24,11 @@ export default {
       // console.log(res);
       this.channelList = res.data.data.channels;
     });
+  },
+  methods: {
+    toFather(e){
+      this.$emit('change',e)
+    }
   },
 };
 </script>

@@ -33,10 +33,10 @@ axios.defaults.transformResponse= [function (data) {
 // 添加请求拦截器
 axios.interceptors.request.use(function (config) {
   // 在发送请求之前做些什么
-  const obj =JSON.parse(window.sessionStorage.getItem('user_info'))
+  const user =JSON.parse(window.sessionStorage.getItem('user_info'))
 
-  if (obj) 
-    config.headers.Authorization=`Bearer ${obj.token}`//设置请求头
+  if (user) 
+    config.headers.Authorization=`Bearer ${user.token}`//设置请求头
 
   
   return config;

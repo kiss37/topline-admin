@@ -12,7 +12,7 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="频道">
-          <ttchannel></ttchannel>
+          <ttchannel :channel_id="searchParams.channel_id" @change="searchParams.channel_id=$event"></ttchannel>
         </el-form-item>
         <el-form-item>
           <el-date-picker
@@ -66,7 +66,7 @@
 </template>
 
 <script>
-import ttchannel from '../../../components/ttchannel/index'
+import ttchannel from "../../../components/ttchannel/index";
 export default {
   name: "article1",
   components: {
@@ -76,19 +76,16 @@ export default {
     return {
       total: 0,
       loading: false,
-      
       searchParams: {
         status: "",
-        
-        date: ""
+        date: "",
+        channel_id:""
       },
       tableData: []
     };
   },
   methods: {
     doDel(row) {
-      console.log(row);
-      
       this.$confirm("确定要删除?", "温馨提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -102,8 +99,8 @@ export default {
               message: "删除成功!"
             });
           });
-            // 重新加载数据
-            this.loadTableData(1);
+          // 重新加载数据
+          this.loadTableData(1);
         })
         .catch(() => {
           this.$message({
@@ -139,17 +136,19 @@ export default {
             begin_pubdate: this.searchParams.date[0],
             end_pubdate: this.searchParams.date[1],
             page: page
-          },
-          headers: {
-            Authorization: `Bearer ${obj.token}`
           }
+          // headers: {
+          //   Authorization: `Bearer ${obj.token}`
+          // }
         })
         .then(res => {
           // console.log(res);
-          // 赋值表数据tableData
+          // 给表格数据源赋值
           this.tableData = res.data.data.results;
           // 赋值总条数
           this.total = res.data.data.total_count;
+
+          // 数据回来了就不用转了
           this.loading = false;
         });
     },
@@ -159,7 +158,6 @@ export default {
   },
   created() {
     this.loadTableData(1);
-   
   },
   filters: {
     formatStatus(val) {

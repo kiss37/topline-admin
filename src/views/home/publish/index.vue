@@ -9,7 +9,7 @@
       </el-form-item>
       <el-form-item label="内容"></el-form-item>
       <el-form-item label="频道">
-        <ttchannel></ttchannel>
+        <ttchannel :channel_id="form.channel_id" @change="form.channel_id=$event"></ttchannel>
       </el-form-item>
       <el-form-item>
         <el-button>保存草稿</el-button>
@@ -39,7 +39,8 @@ export default {
     return {
       form: {
         title: "",
-        content: ""
+        content: "",
+        channel_id:""
       },
       rules: {
         title: [
