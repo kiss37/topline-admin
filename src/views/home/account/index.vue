@@ -6,35 +6,114 @@
           <el-input v-model="userInfo.name" size="small"></el-input>
         </el-form-item>
         <el-form-item label="媒体简介">
-          <el-input type="textarea" :rows="2"></el-input>
+          <el-input type="textarea" :rows="2" v-model="userInfo.intor" size="small"></el-input>
         </el-form-item>
         <el-form-item label="头条号ID">
-          <el-input v-model="userInfo.name" size="small" disabled></el-input>
+          <el-input v-model="userInfo.id" size="small" disabled></el-input>
         </el-form-item>
         <el-form-item label="绑定手机">
-          <el-input v-model="userInfo.name" size="small" disabled=""></el-input>
+          <el-input v-model="userInfo.mobile" size="small" disabled></el-input>
         </el-form-item>
         <el-form-item label="邮箱">
-          <el-input v-model="userInfo.name" size="small"></el-input>
+          <el-input v-model="userInfo.email" size="small"></el-input>
         </el-form-item>
-        <el-button type="primary" >保存更新</el-button>
+        <el-button type="primary" @click="doSave">保存更新</el-button>
       </el-form>
     </el-aside>
-    <el-main>Main</el-main>
+    <el-main>
+      <!-- 这个组件默认自带发post请求 而我们需要发送patch请求所以通过自定义一个请求 http-request -->
+      <!-- <el-upload
+        class="avatar-uploader"
+        action="https://jsonplaceholder.typicode.com/posts/"
+        :show-file-list="false"
+        :on-success="handleAvatarSuccess"
+        :before-upload="beforeAvatarUpload"
+      > -->
+      <el-upload
+        action=""
+        class="avatar-uploader"
+        :http-request="cunstomUpload"
+        :show-file-list="false"
+        >
+        <img v-if="userInfo.photo" :src="userInfo.photo" class="avatar" />
+        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+      </el-upload>
+    </el-main>
   </el-container>
 </template>
 
 <script>
+import { log } from 'util';
 export default {
+  name:"account",
   data() {
     return {
       userInfo: {
-        name: ""
+        
       }
     };
+  },
+  methods: {
+    doSave() {
+      //   // 发送axios  因为userInfo就是一个对象所以直接传参数
+      this.$axios.patch(`/mp/v1_0/user/profile`, this.userInfo).then(res => {
+        // console.log(res);
+        if (res.data.message.toLowerCase() == "ok") {
+          this.$message.success("修改成功");
+        }
+      });
+    },
+    cunstomUpload(data){
+      // 发送 patch请求
+      // console.log(data);
+      // 上传文件通过formdata上传
+      let fm=new FormData()
+      fm.append("photo",data.file)
+      // 发送请求
+      this.$axios.patch('/mp/v1_0/user/photo',fm)
+      .then(res=>{
+        // console.log(res);
+        this.userInfo.photo=res.data.data.photo
+          
+      })
+    }
+  },
+  created() {
+    // 一进来发送请求获取用户所有信息
+    this.$axios.get(`/mp/v1_0/user/profile`).then(res => {
+      // console.log(res);
+      this.userInfo = res.data.data;
+      
+    });
   }
 };
 </script>
 
 <style>
+.avatar-uploader{
+  margin: 40px 0 0 40px;
+}
+.avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    line-height: 178px;
+    text-align: center;
+  }
+  .avatar {
+    width: 178px;
+    height: 178px;
+    display: block;
+  }
 </style>
