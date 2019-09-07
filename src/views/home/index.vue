@@ -64,8 +64,8 @@
             <el-col :span="4" :offset="4" class="my-right">
               <el-dropdown trigger="click" @command="doCmd" class="my-dropdown">
                 <span class="el-dropdown-link">
-                  <img :src="userInfo.photo" alt />
-                  <span class="username">{{ userInfo.name }}</span>
+                  <img :src="$store.state.userInfo.photo" alt />
+                  <span class="username">{{ $store.state.userInfo.name }}</span>
                   <i class="el-icon-arrow-down el-icon--right"></i>
                 </span>
                 <el-dropdown-menu slot="dropdown">

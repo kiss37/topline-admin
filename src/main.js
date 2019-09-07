@@ -58,7 +58,12 @@ axios.interceptors.response.use(function (response) {
   }
   return Promise.reject(error);
 });
+
+import store from './store'
 new Vue({
+  // 挂载路由
   router,
+  // 挂载vue x
+  store,
   render: h => h(App),
 }).$mount('#app')

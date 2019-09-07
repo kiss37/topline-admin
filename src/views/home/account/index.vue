@@ -35,7 +35,7 @@
         :http-request="cunstomUpload"
         :show-file-list="false"
         >
-        <img v-if="userInfo.photo" :src="userInfo.photo" class="avatar" />
+        <img v-if="$store.state.userInfo.photo" :src="$store.state.userInfo.photo" class="avatar" />
         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
       </el-upload>
     </el-main>
@@ -60,7 +60,13 @@ export default {
         // console.log(res);
         if (res.data.message.toLowerCase() == "ok") {
           this.$message.success("修改成功");
+          // 当用户数据发生更改时候 也要给vuex重新赋值
+          this.$store.commit('changeUserInfo',this.userInfo)
+        }else{
+          this.$message.error("修改失败")
         }
+      }).catch(error=>{
+        this.$message.error("修改失败")
       });
     },
     cunstomUpload(data){
@@ -74,7 +80,8 @@ export default {
       .then(res=>{
         // console.log(res);
         this.userInfo.photo=res.data.data.photo
-          
+        //当图片photo发生改变时候 就重新给vuex赋值
+         this.$store.commit('changeUserInfo',this.userInfo)
       })
     }
   },
@@ -84,6 +91,8 @@ export default {
       // console.log(res);
       this.userInfo = res.data.data;
       
+      // 使用vuex 调用方法修改值 直接把我们的userInfo 传过去进行赋值
+      this.$store.commit('changeUserInfo',this.userInfo)
     });
   }
 };
