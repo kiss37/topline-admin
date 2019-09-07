@@ -16,6 +16,7 @@ import login from '../views/login'
 import home from '../views/home/index.vue'
 import publish from '../views/home/publish'
 import article from '../views/home/article/index.vue'
+import comment from '../views/comment'
 //导入进度条插件 以及css
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
@@ -29,7 +30,8 @@ const routes = [
     children: [
       { path: '/article', component: article },
       { path: '/publish', component: publish },
-      { path: '/publish/:id', component: publish,name:"publish-edit" }
+      { path: '/publish/:id', component: publish,name:"publish-edit" },
+      { path: '/comment', component: comment,name:"comment" }
     ]
   },
   { path: '/', redirect: '/login' }
