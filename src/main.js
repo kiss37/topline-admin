@@ -50,10 +50,12 @@ axios.interceptors.response.use(function (response) {
   // 对响应数据做点什么
   return response;
 }, function (error) {
-  // 对响应错误做点什么
-  Vue.prototype.$message.error('请先登录')
-  // 返回登录页
-  router.push('/login')
+  // 对响应错误做点什么当错误是  401 表示未登录 再打回登录页面
+  if (error.response.status==401) {
+    Vue.prototype.$message.error('请先登录')
+    // 返回登录页
+    router.push('/login')
+  }
   return Promise.reject(error);
 });
 
