@@ -58,8 +58,6 @@ axios.interceptors.response.use(function (response) {
   }
   return Promise.reject(error);
 });
-
-
 new Vue({
   router,
   render: h => h(App),
