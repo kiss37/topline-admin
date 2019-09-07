@@ -136,12 +136,9 @@ export default {
           return false;
         }
       });
-    }
-  },
-  created() {
-    // 新增不需要发请求渲染内容
-    if (this.$route.name == "publish-edit") {
-      this.$axios
+    },
+    loadData(){
+       this.$axios
         .get(`/mp/v1_0/articles/${this.$route.params.id}`)
         .then(res => {
           // console.log(res);
@@ -154,8 +151,16 @@ export default {
           this.isLoading = false;
         });
     }
-    this.isLoading = false;
   },
+  created() {
+    // 新增不需要发请求渲染内容
+    if (this.$route.name == "publish-edit") {
+     this.loadData()
+    }else{
+      this.isLoading = false;
+    }
+  },
+  // 跳转路由前会进行的操作
   beforeRouteLeave(to, from, next) {
     // 判断是否是修改操作,还是新增操作 通过name
     if (this.$route.name == "publish-edit") {
@@ -188,6 +193,20 @@ export default {
         // 点击取消了就啥都不干
       });
   },
+  watch:{
+    // 监听参数id的变化
+    "$route.params.id"(value){
+      // 这个值就是变化了的id值
+      if(value){
+        // 如果有id值表示是修改操作就渲染form
+        this.loadData()
+      }else{
+        // 到这里就表示新增操作就得清空数据
+        this.form.title="",
+        this.form.content=""
+      }
+    }
+  }
 };
 </script>
 
