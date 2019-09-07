@@ -187,7 +187,7 @@ export default {
       .catch(() => {
         // 点击取消了就啥都不干
       });
-  }
+  },
 };
 </script>
 
