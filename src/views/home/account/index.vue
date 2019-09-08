@@ -6,7 +6,7 @@
           <el-input v-model="userInfo.name" size="small"></el-input>
         </el-form-item>
         <el-form-item label="媒体简介">
-          <el-input type="textarea" :rows="2" v-model="userInfo.intor" size="small"></el-input>
+          <el-input type="textarea" :rows="2" v-model="userInfo.intro" size="small"></el-input>
         </el-form-item>
         <el-form-item label="头条号ID">
           <el-input v-model="userInfo.id" size="small" disabled></el-input>

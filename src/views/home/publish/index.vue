@@ -79,7 +79,8 @@ export default {
         }
       },
       // 用一个对象保存初始数据
-      oldForm: {}
+      oldForm: {},
+      isSend: false
     };
   },
   methods: {
@@ -127,6 +128,7 @@ export default {
                 // console.log(res);
                 if (res.data.message.toLowerCase() == "ok") {
                   this.$message.success("发布成功");
+                  this.isSend = true;
                   this.$router.push("/article");
                 }
               });
@@ -137,8 +139,8 @@ export default {
         }
       });
     },
-    loadData(){
-       this.$axios
+    loadData() {
+      this.$axios
         .get(`/mp/v1_0/articles/${this.$route.params.id}`)
         .then(res => {
           // console.log(res);
@@ -155,8 +157,8 @@ export default {
   created() {
     // 新增不需要发请求渲染内容
     if (this.$route.name == "publish-edit") {
-     this.loadData()
-    }else{
+      this.loadData();
+    } else {
       this.isLoading = false;
     }
   },
@@ -174,7 +176,11 @@ export default {
       }
     } else {
       // 如果是新增操作就判断他是否为空, 为空代表他没做操作 直接返回不会弹窗
-      if (this.form.title == "" && this.form.content == "") {
+      if (
+        (this.form.title == "" && this.form.content == "") ||
+        this.isSend == true
+      ) {
+        this.isSend = false;
         return next();
       }
     }
@@ -193,17 +199,16 @@ export default {
         // 点击取消了就啥都不干
       });
   },
-  watch:{
+  watch: {
     // 监听参数id的变化
-    "$route.params.id"(value){
+    "$route.params.id"(value) {
       // 这个值就是变化了的id值
-      if(value){
+      if (value) {
         // 如果有id值表示是修改操作就渲染form
-        this.loadData()
-      }else{
+        this.loadData();
+      } else {
         // 到这里就表示新增操作就得清空数据
-        this.form.title="",
-        this.form.content=""
+        (this.form.title = ""), (this.form.content = "");
       }
     }
   }

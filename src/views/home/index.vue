@@ -31,7 +31,7 @@
               <el-menu-item index="/publish">发布文章</el-menu-item>
               <el-menu-item index="/article">内容列表</el-menu-item>
               <el-menu-item index="/comment">评论列表</el-menu-item>
-              <el-menu-item index="1-3">素材管理</el-menu-item>
+              <el-menu-item index="/media">素材管理</el-menu-item>
             </el-submenu>
 
             <el-submenu index="3">
@@ -111,11 +111,16 @@ export default {
   },
   created() {
     // 先获取json文件再转成对象
-    var res = window.sessionStorage.getItem("user_info");
-    var obj = JSON.parse(res);
-    // 设置给值
-    this.userInfo.name = obj.name;
-    this.userInfo.photo = obj.photo;
+    // var res = window.sessionStorage.getItem("user_info");
+    // var obj = JSON.parse(res);
+    // // 设置给值
+    // this.userInfo.name = obj.name;
+    // this.userInfo.photo = obj.photo;
+    this.$axios.get("/mp/v1_0/user/profile").then(res=>{
+      // console.log(res);
+      // 把获取的用户信息
+      this.$store.commit('changeUserInfo',res.data.data)
+    })
   }
 };
 </script>

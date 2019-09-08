@@ -19,6 +19,7 @@ import article from '../views/home/article/index.vue'
 import comment from '../views/home/comment'
 import account from '../views/home/account'
 import overview from '../views/home/overview'
+import media from '../views/home/media'
 //导入进度条插件 以及css
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
@@ -36,6 +37,7 @@ const routes = [
       { path: '/comment', component: comment,name:"comment" },
       { path: '/account', component: account,name:"account" },
       { path: '/overview', component: overview,name:"overview" },
+      { path: '/media', component: media,name:"media" },
     ]
   },
   { path: '/', redirect: '/login' }

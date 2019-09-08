@@ -79,14 +79,14 @@ export default {
       searchParams: {
         status: "",
         date: "",
-        channel_id:""
+        channel_id: ""
       },
       tableData: []
     };
   },
   methods: {
-    doEdit(row){
-      this.$router.push('/publish/'+row.id)
+    doEdit(row) {
+      this.$router.push("/publish/" + row.id);
     },
     doDel(row) {
       this.$confirm("确定要删除?", "温馨提示", {
@@ -95,15 +95,20 @@ export default {
         type: "warning"
       })
         .then(() => {
+          // console.log(row.id);
           this.$axios.delete(`/mp/v1_0/articles/${row.id}`).then(res => {
+            // console.log(res);
             // 提示
             this.$message({
               type: "success",
               message: "删除成功!"
             });
+            // setTimeout(() => {
+              
+            // }, 1000);
+            // 重新加载数据
+            this.loadTableData(1);
           });
-          // 重新加载数据
-          this.loadTableData(1);
         })
         .catch(() => {
           this.$message({
@@ -145,7 +150,7 @@ export default {
           // }
         })
         .then(res => {
-          // console.log(res);
+          console.log(res);
           // 给表格数据源赋值
           this.tableData = res.data.data.results;
           // 赋值总条数
@@ -178,8 +183,7 @@ export default {
           return "已删除";
       }
     }
-  },
-  
+  }
 };
 </script>
 
