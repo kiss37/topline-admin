@@ -14,9 +14,9 @@
           <el-radio :label="0">无图</el-radio>
           <el-radio :label="-1">自动</el-radio>
         </el-radio-group>
-        <el-row v-if="form.cover.type>0">
-          <el-col :span="5" v-for="item in form.cover.type">
-            <uploadimage @change="form.cover.images[item - 1] = $event"></uploadimage>
+        <el-row v-if="form.cover.type > 0">
+          <el-col :span="6" v-for="item in form.cover.type">
+            <upimg @change="form.cover.images[item - 1] = $event"></upimg>
           </el-col>
         </el-row>
       </el-form-item>
@@ -42,13 +42,13 @@ import { quillEditor } from "vue-quill-editor";
 import ttchannel from "../../../components/ttchannel/index";
 
 // 导入小组件上传图片
-import uploadimage from "./components/uploadimage";
+import upimg from "./components/uploadimage";
 export default {
   name: "publish",
   components: {
     quillEditor,
     ttchannel,
-    uploadimage
+    upimg
   },
   data() {
     return {
@@ -56,10 +56,10 @@ export default {
       form: {
         title: "",
         content: "",
-        channel_id: "",
+        channel_id: 1,
         cover: {
           type: 1,
-          images: []
+          images: ["http://toutiao.meiduo.site/FrIyKehaUmJEtachArANReeuI_8S"]
         }
       },
       rules: {
@@ -103,7 +103,14 @@ export default {
     };
   },
   methods: {
+    // imgList(e,a){
+    //  console.log(e,a);
+    //  this.form.cover.images[e - 1] = a
+    //  console.log('---',this.form.cover.images)
+    //  console.log(typeof a)
+    // },
     doPublish(formName) {
+      console.log(this.form.cover.images);
       // 先做个表单验证
       this.$refs[formName].validate(valid => {
         if (valid) {
@@ -118,7 +125,7 @@ export default {
             //     channel_id: this.form.channel_id
             //   })
             this.$axios
-              .put(`/mp/v1_0/articles/${this.$route.params.id}`,this.form)
+              .put(`/mp/v1_0/articles/${this.$route.params.id}`, this.form)
               .then(res => {
                 if (res.data.message.toLowerCase() == "ok") {
                   this.$message.success("发布成功");
@@ -128,16 +135,24 @@ export default {
           } else {
             // 执行新增操作
             // 来到这里表示都通过了验证可以发送axios了
-            this.$axios
-              .post(`/mp/v1_0/articles`, this.form)
-              .then(res => {
-                // console.log(res);
-                if (res.data.message.toLowerCase() == "ok") {
-                  this.$message.success("发布成功");
-                  this.isSend = true;
-                  this.$router.push("/article");
-                }
-              });
+            alert("这是新增");
+            console.log(this.form.title);
+            console.log(this.form.content);
+            console.log(this.form.cover.images[0]);
+            console.log(this.form.channel_id);
+            this.$axios.post("/mp/v1_0/articles", {
+                title: this.form.title,
+                content: this.form.content,
+                cover: this.form.cover,
+                channel_id: this.form.channel_id
+            }).then(res => {
+              console.log(res);
+              if (res.data.message.toLowerCase() == "ok") {
+                this.$message.success("发布成功");
+                this.isSend = true;
+                this.$router.push("/article");
+              }
+            });
           }
         } else {
           console.log("error submit!!");

@@ -5,7 +5,7 @@
       <i v-if="!isShowImg" class="iconfont icon-image_upload"></i>
       <img v-if="isShowImg" :src="imageUrl" alt="">
     </div>
-    <el-dialog :visible.sync="dialogVisible" width="30%">
+    <el-dialog :visible.sync="dialogVisible" width="50%">
       <el-tabs v-model="activeName">
         <el-tab-pane label="上传图片" name="first">
           <el-upload
@@ -20,7 +20,9 @@
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         </el-tab-pane>
-        <el-tab-pane label="媒体库" name="second">配置管理</el-tab-pane>
+        <el-tab-pane label="媒体库" name="second">
+          <media @checked="imageUrl=$event"></media>
+        </el-tab-pane>
       </el-tabs>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
@@ -31,8 +33,12 @@
 </template>
 
 <script>
+import media from './media.vue'
 export default {
   name: "uploadimage",
+  components:{
+    media
+  },
   data() {
     return {
       // 设值设置图片显示人然后p标签和i标签隐藏
