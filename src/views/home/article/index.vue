@@ -36,7 +36,7 @@
     <el-table :data="tableData" style="width: 100% ;padding-right:10px" v-loading="loading">
       <el-table-column prop="cover" label="封面" width="200">
         <template slot-scope="scope">
-          <img width="60" :src="scope.row.cover.images[0]" alt />
+          <img width="60" v-for="item in scope.row.cover.images" :src="item" alt />
         </template>
       </el-table-column>
       <el-table-column prop="title" label="标题" width="200"></el-table-column>
@@ -98,6 +98,7 @@ export default {
           // console.log(row.id);
           this.$axios.delete(`/mp/v1_0/articles/${row.id}`).then(res => {
             // console.log(res);
+          
             // 提示
             this.$message({
               type: "success",

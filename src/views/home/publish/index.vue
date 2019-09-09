@@ -7,7 +7,19 @@
       <el-form-item label="内容">
         <quillEditor v-model="form.content" :options="editorOption"></quillEditor>
       </el-form-item>
-      <el-form-item label="内容"></el-form-item>
+      <el-form-item label="封面">
+        <el-radio-group v-model="form.cover.type">
+          <el-radio :label="1">单图</el-radio>
+          <el-radio :label="3">三图</el-radio>
+          <el-radio :label="0">无图</el-radio>
+          <el-radio :label="-1">自动</el-radio>
+        </el-radio-group>
+        <el-row v-if="form.cover.type>0">
+          <el-col :span="5" v-for="item in form.cover.type">
+            <uploadimage @change="form.cover.images[item - 1] = $event"></uploadimage>
+          </el-col>
+        </el-row>
+      </el-form-item>
       <el-form-item label="频道">
         <ttchannel :channel_id="form.channel_id" @change="form.channel_id=$event"></ttchannel>
       </el-form-item>
@@ -29,11 +41,14 @@ import { quillEditor } from "vue-quill-editor";
 // 导入小组件 所有文章类别
 import ttchannel from "../../../components/ttchannel/index";
 
+// 导入小组件上传图片
+import uploadimage from "./components/uploadimage";
 export default {
   name: "publish",
   components: {
     quillEditor,
-    ttchannel
+    ttchannel,
+    uploadimage
   },
   data() {
     return {
@@ -41,7 +56,11 @@ export default {
       form: {
         title: "",
         content: "",
-        channel_id: ""
+        channel_id: "",
+        cover: {
+          type: 1,
+          images: []
+        }
       },
       rules: {
         title: [
@@ -91,18 +110,15 @@ export default {
           // 做个判断是修改还是新增 通过路由命名 name:publish-edit
           if (this.$route.name == "publish-edit") {
             // 执行修改操作
+            // this.$axios
+            //   .put(`/mp/v1_0/articles/${this.$route.params.id}`, {
+            //     title: this.form.title,
+            //     content: this.form.content,
+            //     cover: this.form.cover,
+            //     channel_id: this.form.channel_id
+            //   })
             this.$axios
-              .put(`/mp/v1_0/articles/${this.$route.params.id}`, {
-                title: this.form.title,
-                content: this.form.content,
-                cover: {
-                  type: 1,
-                  images: [
-                    "http://toutiao.meiduo.site/FkIzGUd35DLYUnrQQz40a2RYxHvY"
-                  ]
-                },
-                channel_id: this.form.channel_id
-              })
+              .put(`/mp/v1_0/articles/${this.$route.params.id}`,this.form)
               .then(res => {
                 if (res.data.message.toLowerCase() == "ok") {
                   this.$message.success("发布成功");
@@ -113,17 +129,7 @@ export default {
             // 执行新增操作
             // 来到这里表示都通过了验证可以发送axios了
             this.$axios
-              .post(`/mp/v1_0/articles`, {
-                title: this.form.title,
-                content: this.form.content,
-                cover: {
-                  type: 1,
-                  images: [
-                    "http://toutiao.meiduo.site/FkIzGUd35DLYUnrQQz40a2RYxHvY"
-                  ]
-                },
-                channel_id: this.form.channel_id
-              })
+              .post(`/mp/v1_0/articles`, this.form)
               .then(res => {
                 // console.log(res);
                 if (res.data.message.toLowerCase() == "ok") {
@@ -215,7 +221,7 @@ export default {
 };
 </script>
 
-<style>
+<style lang="less">
 .ql-editor {
   height: 400px;
 }

@@ -14,7 +14,7 @@ Vue.use(VueRouter)
 // 导入组件
 import login from '../views/login'
 import home from '../views/home/index.vue'
-import publish from '../views/home/publish'
+import publish from '../views/home/publish/index.vue'
 import article from '../views/home/article/index.vue'
 import comment from '../views/home/comment'
 import account from '../views/home/account'
